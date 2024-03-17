@@ -9,6 +9,13 @@ services:
       - MYSQL_DATABASE=tlc
       - MYSQL_USER=tlc
       - MYSQL_PASSWORD=tlc
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    ports:
+      - 8888:8888
+    environment:
+      - PMA_ARBITRARY=1
   etherpad:
     image: etherpad/etherpad
     ports:
