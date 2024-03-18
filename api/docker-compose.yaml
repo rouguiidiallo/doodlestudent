@@ -2,6 +2,8 @@ version: "3.8"
 services:
   db:
     image: mysql
+    volumes:
+      - ./src/main/resources/db/migration/:/docker-entrypoint-initdb.d
     ports:
       - "3306:3306"
     environment:
@@ -9,13 +11,6 @@ services:
       - MYSQL_DATABASE=tlc
       - MYSQL_USER=tlc
       - MYSQL_PASSWORD=tlc
-  phpmyadmin:
-    image: phpmyadmin
-    restart: always
-    ports:
-      - 8888:8888
-    environment:
-      - PMA_ARBITRARY=1
   etherpad:
     image: etherpad/etherpad
     ports:
@@ -27,3 +22,21 @@ services:
     restart: always
     ports:
       - "2525:25"
+  api:
+    container_name: api
+    image: monimageback
+    restart: always
+  front:
+    container_name: front
+    image: monimagefront
+    ports:
+      - 80:80
+    volumes:
+      - ./exampleconf/doodle.conf:/etc/nginx/conf.d/doodle.conf
+      - ./exampleconf/pad.conf:/etc/nginx/conf.d/pad.conf
+      - ./exampleconf/myadmin.conf:/etc/nginx/conf.d/myadmin.conf
+  myadmin:
+    image: phpmyadmin
+    container_name: myadmin
+    environment: 
+      - PMA_HOST=db
